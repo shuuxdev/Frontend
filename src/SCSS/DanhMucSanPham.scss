@@ -1,0 +1,15 @@
+.data-table {
+    width: 100%;
+    .p-component {
+        font-size: 0.9rem;
+    }
+    .p-toolbar {
+        .p-button {
+            padding: 0.5rem 0.9rem;
+        }
+    }
+    .table-header {
+        display: flex;
+        justify-content: space-between;
+    }
+}
