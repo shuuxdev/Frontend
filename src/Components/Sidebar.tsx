@@ -1,23 +1,17 @@
 // import * as SidebarStyle from '../Styles/Sidebar';
 import Container, { Wrapper } from '../Styles/Container'
-import { a } from '../Helper/Testing'
 import { Link } from 'react-router-dom';
 import { FaBookMedical, FaSearch, FaCircle } from 'react-icons/fa'
 import { BsChevronRight } from 'react-icons/bs'
 import { IconFrame, TextFrame } from '../Styles/Frames'
+
 import Avatar from '../avatar.jpg'
 import { Box, Brand, Dropdown, DropdownItem, Header, Item, SearchContainer, SearchField, SidebarContainer, UserInfo, Username, UserPicture, UserRole, UserStatus } from '../Styles/Sidebar';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../Reducers/allReducer';
-import signIn from '../Actions/signIn'
 
 const Sidebar: React.FC = (props) => {
-    // const authorize = useSelector((state: RootState) => state.authorizeReducer)
-    // const dispatch = useDispatch()
-    // dispatch(signIn({ username: "shuu", password: 123 }))
     return (
         <SidebarContainer>
-            <Wrapper padding="5px">
+            <Wrapper margin="5px">
                 <Brand >
                     <Link to="/danh-muc">NTSOFT</Link>
                 </Brand>
@@ -59,7 +53,7 @@ const DanhSachDanhMuc: React.FC = () => {
     return (
         <Box>
             <DanhMucItem tenDanhMuc="Quản lý" danhSachDanhMucCon={[{ tenDanhMuc: "Bán hàng", link: "/danh-muc/ban-hang" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }]} />
-            <DanhMucItem tenDanhMuc="Danh mục 2" danhSachDanhMucCon={[{ tenDanhMuc: "Chưa thêm", link: "/emptyPage" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }]} />
+            <DanhMucItem tenDanhMuc="Tiện ích" danhSachDanhMucCon={[{ tenDanhMuc: "Chưa thêm", link: "/tien-ich/exam" }, { tenDanhMuc: "Đăng nhập", link: "/user/login" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }]} />
             <DanhMucItem tenDanhMuc="Danh mục 2" danhSachDanhMucCon={[{ tenDanhMuc: "Chưa thêm", link: "/emptyPage" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }, { tenDanhMuc: "Chưa thêm", link: "/emptyPage" }]} />
         </Box>
     )
@@ -72,9 +66,10 @@ interface IDanhMuc {
     tenDanhMuc: string;
     danhSachDanhMucCon: IDanhMucCon[];
 }
-interface IDanhMucCon {
+interface IDanhMucCon extends Omit<React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>, 'disabled' | 'ref'> {
     tenDanhMuc: string;
     link: string;
+
 }
 const DanhMucItem: React.FC<IDanhMuc> = ({ tenDanhMuc, danhSachDanhMucCon }) => {
     return (

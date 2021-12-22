@@ -1,0 +1,185 @@
+nav {
+    width: 100vw;
+    height: 150px;
+    background: #544fe8;
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        height: inherit;
+        .navbox * {
+            color: white;
+        }
+        .navbox > ul {
+            margin-top: 20px;
+        }
+        .navbox {
+            display: flex;
+            flex-direction: column;
+            width: inherit;
+            height: inherit;
+
+            .up {
+                display: flex;
+                justify-content: space-between;
+                .upbox {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    li {
+                        display: flex;
+                        align-items: center;
+                        margin: 0px 20px;
+                    }
+                    li > span {
+                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+                            "Open Sans", "Helvetica Neue", sans-serif;
+                    }
+                }
+            }
+            .down {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                .searchbar {
+                    width: calc(100% - 350px);
+                    position: relative;
+                    max-height: 500px;
+                    z-index: 3;
+                }
+
+                .cart svg {
+                    font-size: 30px;
+                }
+            }
+        }
+    }
+}
+.bottomnav {
+    background: #fff;
+    height: 50px;
+    width: 100vw;
+    .navbox2 {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 50px;
+        .navlink {
+            height: inherit;
+            width: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            span {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+                    "Open Sans", "Helvetica Neue", sans-serif;
+            }
+        }
+    }
+}
+.slide-section {
+    .ms-section {
+        height: 500px;
+        display: flex;
+        justify-content: flex-start;
+        padding-top: 7px;
+        .index-list {
+            height: inherit;
+            width: 200px;
+            background: #fff;
+            border-radius: 5px;
+            margin-right: 7px;
+            .index-item {
+                height: 50px;
+                width: inherit;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-left: 15px;
+
+                span {
+                    font-size: 14px;
+                    color: #505050;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+                        "Open Sans", "Helvetica Neue", sans-serif;
+                }
+            }
+        }
+        .block {
+            width: 100%;
+        }
+    }
+}
+.category-section {
+    margin-top: 60px;
+    .category-header {
+        height: 50px;
+    }
+    .category-box {
+        height: 300px;
+        .category-list {
+            height: inherit;
+            display: grid;
+            grid-template-columns: repeat(9, 120px);
+            grid-auto-rows: 130px;
+            grid-gap: 15px;
+            .category-item {
+                background-color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+
+                .category-img {
+                    height: 80px;
+                    width: 80px;
+                }
+            }
+        }
+    }
+}
+.main-section {
+    margin-top: 70px;
+    .product-view {
+        .product-main-header {
+            height: 50px;
+        }
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(6, 190px);
+            grid-auto-rows: 300px;
+            grid-gap: 14px;
+            .item {
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                .item-img {
+                    height: 200px;
+                    width: inherit;
+                    img {
+                        height: inherit;
+                        max-width: 190px;
+                    }
+                }
+                .caption {
+                    height: 100%;
+                    .product-title {
+                        height: 50px;
+                    }
+                    .product-info {
+                        display: flex;
+                        .text-center-flex {
+                            height: 30px;
+                            flex-grow: 1;
+                            display: flex;
+                            align-items: center;
+                            .currency {
+                                color: #ee4d2d;
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

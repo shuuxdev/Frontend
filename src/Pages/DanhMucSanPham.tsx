@@ -16,6 +16,7 @@ import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
 import '../SCSS/DanhMucSanPham.scss'
 import { Wrapper } from '../Styles/Container'
+import Sidebar from '../Components/Sidebar';
 
 const DanhMucSanPham: React.FC = () => {
 
@@ -59,6 +60,8 @@ const DanhMucSanPham: React.FC = () => {
     const toast: any = useRef(null);
     const [globalFilter, setGlobalFilter] = useState("");
 
+    const [productsChanged, setProductsChanged] = useState(true);
+
     const editSanPham = (rowData: ISanPham) => {
         console.log(rowData);
         if (rowData.id) {
@@ -99,7 +102,6 @@ const DanhMucSanPham: React.FC = () => {
             switch (result) {
                 case "Ok":
                     toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Cập nhật sản phẩm thành công', life: 3000 });
-                    setProducts(_products);
                     break;
                 default:
                     toast.current.show({ severity: 'error', summary: 'Thất bại', detail: 'Cập nhật sản phẩm thất bại', life: 3000 });
@@ -115,11 +117,10 @@ const DanhMucSanPham: React.FC = () => {
                     break;
                 default:
                     toast.current.show({ severity: 'success', summary: 'Thành công', detail: 'Thêm sản phẩm thành công', life: 3000 });
-                    _products.push({ ..._product, id: result });
-                    setProducts(_products);
                     break;
             }
         }
+        setProductsChanged(!productsChanged);
         closeDialog();
     }
     const xoaSanPham = async () => {
@@ -128,8 +129,7 @@ const DanhMucSanPham: React.FC = () => {
                 method: "DELETE",
             }
             const result = await fetch(`/api/xoaSanPham/?id=${product.id}`, requestOption)
-            const _products = products.filter((prd) => prd.id !== product.id)
-            setProducts(_products);
+            setProductsChanged(!productsChanged);
             setDeleteProductDialog(false);
             setProduct(emptyProduct);
             toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Xóa sản phẩm thành công', life: 3000 });
@@ -221,78 +221,80 @@ const DanhMucSanPham: React.FC = () => {
     useEffect(() => {
         fetch('https://localhost:5001/api/getAllSanPham').then(res => res.json()).then(d => setProducts(d));
 
-    }, []);
+    }, [productsChanged]);
     return (
-        <div className="data-table">
-            <Wrapper padding="15px">
-                <Toast ref={toast} />
-                <Toolbar className="p-mb-3" left={leftToolbarTemplate}></Toolbar>
-                <DataTable key="id" value={products} header={header} selection={selectedProduct}
-                    paginator rows={5} rowsPerPageOptions={[3, 5, 10, 25]}
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    globalFilter={globalFilter}>
-                    <Column field="maSanPham" sortable header="Mã sẩn phẩm"></Column>
-                    <Column field="tenSanPham" sortable header="Tên sản phẩm"></Column>
-                    <Column field="giaSanPham" sortable header="Giá"></Column>
-                    <Column field="danhMucId" sortable header="Danh Mục"></Column>
-                    <Column field="danhGia" sortable header="Đánh giá" body={danhGiaTemplate}></Column>
-                    <Column field="trangThai" sortable header="Trạng Thái" body={trangThaiTemplate}></Column>
-                    <Column field="soLuong" sortable header="Số Lượng"></Column>
-                    <Column header="Thao tác" body={thaoTacTemplate}></Column>
-                </DataTable>
-                <Dialog visible={dialog} style={{ width: '450px' }} footer={productDialogFooter} header="Chi tiết sản phẩm" className="p-fluid" onHide={() => setDialog(false)}>
-                    <div className="p-field">
-                        <label htmlFor="code">Mã sản phẩm</label>
-                        <InputText required autoFocus id="code" value={product.maSanPham} onChange={e => setProduct({ ...product, maSanPham: e.target.value })} />
-                        {submitted && !product.maSanPham && <small className="p-error">Không được bỏ trống mã sản phẩm</small>}
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="name">Tên sản phẩm</label>
-                        <InputText id="name" value={product.tenSanPham} onChange={e => setProduct({ ...product, tenSanPham: e.target.value })} />
-                        {submitted && !product.tenSanPham && <small className="p-error">Không được bỏ trống tên sản phẩm</small>}
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="state"> Trạng thái</label>
-                        <Dropdown id="state" value={product.trangThai} optionLabel="name" optionValue="value" options={trangThaiOption} onChange={e => setProduct({ ...product, trangThai: e.target.value })} />
-                        {submitted && !product.trangThai && <small className="p-error">Không được bỏ trống trạng thái</small>}
-
-                    </div>
-                    <div className="p-field">
-                        <label htmlFor="review">Đánh giá</label>
-                        <Rating id="review" value={product.danhGia} onChange={(e) => { setProduct({ ...product, danhGia: e.target.value }) }} cancel={false} />
-
-                    </div>
-
-
-
-                    <div className="p-formgrid p-grid">
-                        <div className="p-field p-col">
-                            <label htmlFor="price">Giá</label>
-                            <InputNumber id="price" value={product.giaSanPham} onChange={(e) => { setProduct({ ...product, giaSanPham: e.value }) }} />
+        <React.Fragment>
+            <Sidebar />
+            <div className="data-table">
+                <Wrapper margin="15px">
+                    <Toast ref={toast} />
+                    <Toolbar className="p-mb-3" left={leftToolbarTemplate}></Toolbar>
+                    <DataTable key="id" value={products} header={header} selection={selectedProduct}
+                        paginator rows={5} rowsPerPageOptions={[3, 5, 10, 25]}
+                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                        globalFilter={globalFilter}>
+                        <Column field="maSanPham" sortable header="Mã sẩn phẩm"></Column>
+                        <Column field="tenSanPham" sortable header="Tên sản phẩm"></Column>
+                        <Column field="giaSanPham" sortable header="Giá"></Column>
+                        <Column field="danhMucId" sortable header="Danh Mục"></Column>
+                        <Column field="danhGia" sortable header="Đánh giá" body={danhGiaTemplate}></Column>
+                        <Column field="trangThai" sortable header="Trạng Thái" body={trangThaiTemplate}></Column>
+                        <Column field="soLuong" sortable header="Số Lượng"></Column>
+                        <Column header="Thao tác" body={thaoTacTemplate}></Column>
+                    </DataTable>
+                    <Dialog visible={dialog} style={{ width: '450px' }} footer={productDialogFooter} header="Chi tiết sản phẩm" className="p-fluid" onHide={() => setDialog(false)}>
+                        <div className="p-field">
+                            <label htmlFor="code">Mã sản phẩm</label>
+                            <InputText disabled autoFocus id="code" value={product.maSanPham} />
+                        </div>
+                        <div className="p-field">
+                            <label htmlFor="name">Tên sản phẩm</label>
+                            <InputText id="name" value={product.tenSanPham} onChange={e => setProduct({ ...product, tenSanPham: e.target.value })} />
+                            {submitted && !product.tenSanPham && <small className="p-error">Không được bỏ trống tên sản phẩm</small>}
+                        </div>
+                        <div className="p-field">
+                            <label htmlFor="state"> Trạng thái</label>
+                            <Dropdown id="state" value={product.trangThai} optionLabel="name" optionValue="value" options={trangThaiOption} onChange={e => setProduct({ ...product, trangThai: e.target.value })} />
+                            {submitted && !product.trangThai && <small className="p-error">Không được bỏ trống trạng thái</small>}
 
                         </div>
-                        <div className="p-field p-col">
-                            <label htmlFor="quantity">Số Lượng</label>
-                            <InputNumber id="quantity" value={product.soLuong} onChange={(e) => { setProduct({ ...product, soLuong: e.value }) }} />
+                        <div className="p-field">
+                            <label htmlFor="review">Đánh giá</label>
+                            <Rating id="review" value={product.danhGia} onChange={(e) => { setProduct({ ...product, danhGia: e.target.value }) }} cancel={false} />
 
                         </div>
-                    </div>
-                </Dialog>
-                <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
-                    <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {product && <span>Are you sure you want to delete <b>{product.tenSanPham}</b>?</span>}
-                    </div>
-                </Dialog>
 
-                <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-                    <div className="confirmation-content">
-                        <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
-                        {product && <span>Are you sure you want to delete the selected products?</span>}
-                    </div>
-                </Dialog>
-            </Wrapper>
-        </div>
+
+
+                        <div className="p-formgrid p-grid">
+                            <div className="p-field p-col">
+                                <label htmlFor="price">Giá</label>
+                                <InputNumber id="price" value={product.giaSanPham} onChange={(e) => { setProduct({ ...product, giaSanPham: e.value }) }} />
+
+                            </div>
+                            <div className="p-field p-col">
+                                <label htmlFor="quantity">Số Lượng</label>
+                                <InputNumber id="quantity" value={product.soLuong} onChange={(e) => { setProduct({ ...product, soLuong: e.value }) }} />
+
+                            </div>
+                        </div>
+                    </Dialog>
+                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                        <div className="confirmation-content">
+                            <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                            {product && <span>Are you sure you want to delete <b>{product.tenSanPham}</b>?</span>}
+                        </div>
+                    </Dialog>
+
+                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                        <div className="confirmation-content">
+                            <i className="pi pi-exclamation-triangle p-mr-3" style={{ fontSize: '2rem' }} />
+                            {product && <span>Are you sure you want to delete the selected products?</span>}
+                        </div>
+                    </Dialog>
+                </Wrapper>
+            </div>
+        </React.Fragment>
     )
 
 }
